@@ -54,10 +54,10 @@ There are 2 files: paq8pxd.cpp (C++) and paq7asm.asm (NASM/YASM).
 paq7asm.asm is the same as in paq7 and paq8x.  paq8pxd.cpp recognizes the
 following compiler options:
 
-  -DWINDOWS           (to compile in Windows)
-  -DUNIX              (to compile in Unix, Linux, Solairs, MacOS/Darwin, etc)
-  -DNOASM             (to replace paq7asm.asm with equivalent C++)
-  -DDEFAULT_OPTION=N  (to change the default compression level from 5 to N).
+*  -DWINDOWS           (to compile in Windows)
+*  -DUNIX              (to compile in Unix, Linux, Solairs, MacOS/Darwin, etc)
+*  -DNOASM             (to replace paq7asm.asm with equivalent C++)
+*  -DDEFAULT_OPTION=N  (to change the default compression level from 5 to N).
 
 If you compile without -DWINDOWS or -DUNIX, you can still compress files,
 but you cannot compress directories or create them during extraction.
@@ -76,8 +76,8 @@ on your C++ compiler.  In Linux, use "-f elf".
 
 Recommended compiler commands and optimizations:
 
-  UNIX/Linux (PC):
-   g++ paq8pxd.cpp -DUNIX -O3
+UNIX/Linux (PC):
+    g++ paq8pxd.cpp -DUNIX -O3
 
 MinGW produces faster executables than Borland or Mars, but Intel 9
 is about 4% faster than MinGW).
@@ -89,39 +89,39 @@ An archive has the following format.  It is intended to be both
 human and machine readable.  The header ends with CTRL-Z (Windows EOF)
 so that the binary compressed data is not displayed on the screen.
 
-  paq8pxd -N CR LF
-  size TAB filename CR LF
-  size TAB filename CR LF
-  ...
-  CTRL-Z
-  compressed binary data
+    paq8pxd -N CR LF
+    size TAB filename CR LF
+    size TAB filename CR LF
+    ...
+    CTRL-Z
+    compressed binary data
 
 -N is the option (-0 to -9), even if a default was used.
 Plain file names are stored without a path.  Files in compressed
 directories are stored with path relative to the compressed directory
 (using UNIX style forward slashes "/").  For example, given these files:
 
-  123 C:\dir1\file1.txt
-  456 C:\dir2\file2.txt
+    123 C:\dir1\file1.txt
+    456 C:\dir2\file2.txt
 
 Then
 
-  paq8pxd archive \dir1\file1.txt \dir2
+    paq8pxd archive \dir1\file1.txt \dir2
 
 will create archive.paq8pxd with the header:
 
-  paq8pxd -5
-  123     file1.txt
-  456     dir2/file2.txt
+    paq8pxd -5
+    123     file1.txt
+    456     dir2/file2.txt
 
 The command:
 
-  paq8pxd archive.paq8pxd C:\dir3
+    paq8pxd archive.paq8pxd C:\dir3
 
 will create the files:
 
-  C:\dir3\file1.txt
-  C:\dir3\dir2\file2.txt
+    C:\dir3\file1.txt
+    C:\dir3\dir2\file2.txt
 
 Decompression will fail if the first 7 bytes are not "paq8pxd -".  Sizes
 are stored as decimal numbers.  CR, LF, TAB, CTRL-Z are ASCII codes
@@ -150,7 +150,7 @@ i'th model independently predicts
 p1_i = p(y_j = 1 | y_0..j-1), p0_i = 1 - p1_i.
 The network computes the next bit probabilty
 
-  p1 = squash(SUM_i w_i t_i), p0 = 1 - p1                        (1)
+    p1 = squash(SUM_i w_i t_i), p0 = 1 - p1                        (1)
 
 where t_i = stretch(p1_i) is the i'th input, p1_i is the prediction of
 the i'th model, p1 is the output prediction, stretch(p) = ln(p/(1-p)),
@@ -159,13 +159,13 @@ inverses of each other.
 
 After bit y_j (0 or 1) is received, the network is trained:
 
-  w_i := w_i + eta t_i (y_j - p1)                                (2)
+    w_i := w_i + eta t_i (y_j - p1)                                (2)
 
 where eta is an ad-hoc learning rate, t_i is the i'th input, (y_j - p1)
 is the prediction error for the j'th input but, and w_i is the i'th
 weight.  Note that this differs from back propagation:
 
-  w_i := w_i + eta t_i (y_j - p1) p0 p1                          (3)
+    w_i := w_i + eta t_i (y_j - p1) p0 p1                          (3)
 
 which is a gradient descent in weight space to minimize root mean square
 error.  Rather, the goal in compression is to minimize coding cost,
@@ -369,8 +369,8 @@ The input probability is stretched and divided into 32 segments to
 combine with other contexts.  The output is interpolated between two
 adjacent quantized values of stretch(p1).  There are 2 APM stages in series:
 
-  p1 := (p1 + 3 APM(order 0, p1)) / 4.
-  p1 := (APM(order 1, p1) + 2 APM(order 2, p1) + APM(order 3, p1)) / 4.
+    p1 := (p1 + 3 APM(order 0, p1)) / 4.
+    p1 := (APM(order 1, p1) + 2 APM(order 2, p1) + APM(order 3, p1)) / 4.
 
 # PREPROCESSING
 
@@ -455,11 +455,11 @@ which computes 8 elements at a time, is not any faster).
 
 # DIFFERENCES FROM PAQ8PXD_V5
 
-changes in wrt, use 0-9 ind dict if count is larger then a-zA-Z
-8-bit image model changes
-base64 changes
-contextmap from Tangelo
-fixes in DMC model
-cleanup of unused varibles
-fixes in wordmodel
+* changes in wrt, use 0-9 ind dict if count is larger then a-zA-Z
+* 8-bit image model changes
+* base64 changes
+* contextmap from Tangelo
+* fixes in DMC model
+* cleanup of unused varibles
+* fixes in wordmodel
 etc.
